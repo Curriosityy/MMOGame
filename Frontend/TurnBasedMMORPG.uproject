@@ -1,0 +1,127 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.4",
+  "Category": "",
+  "Description": "",
+  "Modules": [
+    {
+      "Name": "TurnBasedMMORPG",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "AdditionalDependencies": [
+        "Engine",
+        "UMG",
+        "GameplayAbilities",
+        "OWSPlugin",
+        "CoreUObject",
+        "FunctionalTesting"
+      ]
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "GameplayAbilities",
+      "Enabled": true
+    },
+    {
+      "Name": "OWSPlugin",
+      "Enabled": true
+    },
+    {
+      "Name": "ModelingToolsEditorMode",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    },
+    {
+      "Name": "AsyncLoadingScreen",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/01f39767dc6b4290877f38365787cbf8"
+    },
+    {
+      "Name": "AutoSizeComments",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/ae89a2c4ab384de0a3f213b23de324f3"
+    },
+    {
+      "Name": "CustomizableInteractionPlugin",
+      "Enabled": true,
+      "MarketplaceURL": "https://www.unrealengine.com/marketplace/en-US/product/customizable-interaction-plugin"
+    },
+    {
+      "Name": "FPSCore",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/1e2dd9aadb6f46db9a42a201177d4cdd"
+    },
+    {
+      "Name": "GameAnalytics",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/d070c3fab7b74c08bab3a89c9cbf4490"
+    },
+    {
+      "Name": "LiveBlueprintDebugger",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/6019cfbf80bb4942add3b61d9180380a"
+    },
+    {
+      "Name": "NiagaraUIRenderer",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/fd24d23ca57b4c59a4e4b7368da250bd",
+      "SupportedTargetPlatforms": [
+        "Win64",
+        "Android"
+      ]
+    },
+    {
+      "Name": "ProjectCleaner",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/4d7f5dc837fc4b009bb91e678adf9fd0"
+    },
+    {
+      "Name": "Xsolla",
+      "Enabled": true,
+      "MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/e32fb866a54a4a36a2359fb7a5251b59"
+    },
+    {
+      "Name": "AutomationDriverTests",
+      "Enabled": true
+    },
+    {
+      "Name": "CQTest",
+      "Enabled": true
+    },
+    {
+      "Name": "Gauntlet",
+      "Enabled": true
+    },
+    {
+      "Name": "NetcodeUnitTest",
+      "Enabled": true
+    },
+    {
+      "Name": "NUTUnrealEngine",
+      "Enabled": true
+    },
+    {
+      "Name": "NetworkPredictionExtras",
+      "Enabled": true
+    },
+    {
+      "Name": "AppleImageUtils",
+      "Enabled": false
+    },
+    {
+      "Name": "AppleMoviePlayer",
+      "Enabled": false
+    },
+    {
+      "Name": "ReplicationSystemTestPlugin",
+      "Enabled": false
+    }
+  ],
+  "TargetPlatforms": [
+    "WindowsNoEditor",
+    "Windows"
+  ]
+}

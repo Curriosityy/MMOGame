@@ -1,0 +1,4 @@
+﻿// 
+
+
+#include "DataAsset/SpellCostTableRow.h"
