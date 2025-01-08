@@ -1,0 +1,178 @@
+version: '3.7'
+
+services:
+
+  # ELK Stack Setup
+  setup:
+    extends:
+      file: .docker/logging.yml
+      service: setup
+
+  # Elastic Search
+  elasticsearch:
+    extends:
+      file: .docker/logging.yml
+      service: elasticsearch
+
+  # LogStash
+  logstash:
+    depends_on:
+       - elasticsearch
+    extends:
+      file: .docker/logging.yml
+      service: logstash
+
+  # Kibana
+  kibana:
+    depends_on:
+      - elasticsearch
+    extends:
+      file: .docker/logging.yml
+      service: kibana
+  
+  # Heartbeat
+  heartbeat:
+    depends_on:
+      - elasticsearch
+    extends:
+      file: .docker/logging.yml
+      service: heartbeat
+
+  # Database
+  database:
+    extends:
+      file: .docker/databases.yml
+      service: ${DATABASE}
+
+  # Messaging Service
+  messaging:
+    extends:
+      file: .docker/messaging.yml
+      service: rabbitmq
+
+  #matchmakingcache:
+  # extends:
+  #  file: .docker/matchmakingcache.yml
+  #  service: matchmakingcache
+
+  # OWS Public Api
+  owspublicapi:
+    image: ${REGISTRY:-ows}/owspublicapi:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: OWSPublicAPI/Dockerfile
+    environment:
+     - OWSStorageConfig__OWSDBBackend=${DATABASE}
+     - OWSStorageConfig__OWSDBConnectionString=${DATABASE_CONNECTION_STRING}
+     - OWSAPIPathConfig__InternalPublicApiURL=${InternalPublicApiURL}
+     - OWSAPIPathConfig__InternalInstanceManagementApiURL=${InternalInstanceManagementApiURL}
+     - OWSAPIPathConfig__InternalCharacterPersistenceApiURL=${InternalCharacterPersistenceApiURL}
+    ports:
+      - "44302:80"
+      - "44303:443"
+    depends_on:
+      - database
+      - messaging
+
+  # OWS Instance Management 
+  owsinstancemanagement:
+    image: ${REGISTRY:-ows}/owsinstancemanagement:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: OWSInstanceManagement/Dockerfile
+    environment:
+     - OWSStorageConfig__OWSDBBackend=${DATABASE}
+     - OWSStorageConfig__OWSDBConnectionString=${DATABASE_CONNECTION_STRING}
+     - OWSAPIPathConfig__InternalPublicApiURL=${InternalPublicApiURL}
+     - OWSAPIPathConfig__InternalInstanceManagementApiURL=${InternalInstanceManagementApiURL}
+     - OWSAPIPathConfig__InternalCharacterPersistenceApiURL=${InternalCharacterPersistenceApiURL}
+     - RabbitMQOptions__RabbitMQHostName=${RabbitMQHostName}
+     - RabbitMQOptions__RabbitMQPort=${RabbitMQPort}
+     - RabbitMQOptions__RabbitMQUserName=${RabbitMQUserName}
+     - RabbitMQOptions__RabbitMQPassword=${RabbitMQPassword}
+    ports:
+      - "44328:80"
+      - "44329:443"
+    depends_on:
+      - database
+      - messaging
+
+  # OWS Character Persistence
+  owscharacterpersistence:
+    image: ${REGISTRY:-ows}/owscharacterpersistence:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: OWSCharacterPersistence/Dockerfile
+    environment:
+     - OWSStorageConfig__OWSDBBackend=${DATABASE}
+     - OWSStorageConfig__OWSDBConnectionString=${DATABASE_CONNECTION_STRING}
+     - OWSAPIPathConfig__InternalPublicApiURL=${InternalPublicApiURL}
+     - OWSAPIPathConfig__InternalInstanceManagementApiURL=${InternalInstanceManagementApiURL}
+     - OWSAPIPathConfig__InternalCharacterPersistenceApiURL=${InternalCharacterPersistenceApiURL}
+     - RabbitMQOptions__RabbitMQHostName=${RabbitMQHostName}
+     - RabbitMQOptions__RabbitMQPort=${RabbitMQPort}
+     - RabbitMQOptions__RabbitMQUserName=${RabbitMQUserName}
+     - RabbitMQOptions__RabbitMQPassword=${RabbitMQPassword}
+    ports:
+      - "44323:80"
+      - "44324:443"
+    depends_on:
+      - database
+      - messaging
+
+  # OWS Global Data
+  owsglobaldata:
+    image: ${REGISTRY:-ows}/owsglobaldata:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: OWSGlobalData/Dockerfile
+    environment:
+     - OWSStorageConfig__OWSDBBackend=${DATABASE}
+     - OWSStorageConfig__OWSDBConnectionString=${DATABASE_CONNECTION_STRING}
+     - OWSAPIPathConfig__InternalPublicApiURL=${InternalPublicApiURL}
+     - OWSAPIPathConfig__InternalInstanceManagementApiURL=${InternalInstanceManagementApiURL}
+     - OWSAPIPathConfig__InternalCharacterPersistenceApiURL=${InternalCharacterPersistenceApiURL}
+     - RabbitMQOptions__RabbitMQHostName=${RabbitMQHostName}
+     - RabbitMQOptions__RabbitMQPort=${RabbitMQPort}
+     - RabbitMQOptions__RabbitMQUserName=${RabbitMQUserName}
+     - RabbitMQOptions__RabbitMQPassword=${RabbitMQPassword}
+    ports:
+      - "44325:80"
+      - "44326:443"
+    depends_on:
+      - database
+      - messaging
+
+  # OWS Management
+  owsmanagement:
+    image: ${REGISTRY:-ows}/owsmanagement:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: OWSManagement/Dockerfile
+    environment:
+     - OWSStorageConfig__OWSDBBackend=${DATABASE}
+     - OWSStorageConfig__OWSDBConnectionString=${DATABASE_CONNECTION_STRING}
+     - OWSAPIPathConfig__InternalPublicApiURL=${InternalPublicApiURL}
+     - OWSAPIPathConfig__InternalInstanceManagementApiURL=${InternalInstanceManagementApiURL}
+     - OWSAPIPathConfig__InternalCharacterPersistenceApiURL=${InternalCharacterPersistenceApiURL}
+    ports:
+      - "44410:80"
+      - "44411:443"
+    depends_on:
+      - database
+      - messaging
+
+networks:
+  elk:
+    driver: bridge
+volumes:
+  setup:
+    name: "ows2-setup"
+  elasticsearch:
+    name: "ows2-elasticsearch"
+  database:
+    name: "ows2-database"
+  messaging:
+    name: "ows2-messaging"
+  matchmakingcache:
+    name: "ows2-matchmakingcache"
